@@ -1,8 +1,11 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ImpulseArenaGameMode.h"
+#include "ImpulseArenaPlayerState.h"
 
 AImpulseArenaGameMode::AImpulseArenaGameMode()
 {
-	// stub
+    DefaultPawnClass = AImpulseArenaCharacter::StaticClass();
+
+    PlayerStateClass = AImpulseArenaPlayerState::StaticClass();
 }

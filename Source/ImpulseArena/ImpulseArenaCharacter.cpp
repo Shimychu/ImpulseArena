@@ -1,5 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+#include "AbilitySystemComponent.h"
+#include "ImpulseArenaPlayerState.h"
 #include "ImpulseArenaCharacter.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
@@ -130,4 +132,47 @@ void AImpulseArenaCharacter::DoJumpEnd()
 {
 	// signal the character to stop jumping
 	StopJumping();
+}
+
+UAbilitySystemComponent*
+AImpulseArenaCharacter::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
+void AImpulseArenaCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	InitializeAbilitySystem();
+}
+
+void AImpulseArenaCharacter::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+
+	InitializeAbilitySystem();
+}
+
+void AImpulseArenaCharacter::InitializeAbilitySystem()
+{
+	AImpulseArenaPlayerState* ImpulsePlayerState =
+		GetPlayerState<AImpulseArenaPlayerState>();
+
+	if (!ImpulsePlayerState)
+	{
+		return;
+	}
+
+	AbilitySystemComponent =
+		ImpulsePlayerState->GetAbilitySystemComponent();
+
+	if (!AbilitySystemComponent)
+	{
+		return;
+	}
+
+	AbilitySystemComponent->InitAbilityActorInfo(
+		ImpulsePlayerState,
+		this);
 }

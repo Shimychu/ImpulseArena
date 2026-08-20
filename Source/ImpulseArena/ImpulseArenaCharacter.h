@@ -2,11 +2,14 @@
 
 #pragma once
 
+#include "AbilitySystemInterface.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+
 #include "ImpulseArenaCharacter.generated.h"
 
+class UAbilitySystemComponent;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputAction;
@@ -19,7 +22,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
  *  Implements a controllable orbiting camera
  */
 UCLASS(abstract)
-class AImpulseArenaCharacter : public ACharacter
+class IMPULSEARENA_API AImpulseArenaCharacter: public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -30,6 +33,12 @@ class AImpulseArenaCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	virtual void PossessedBy(AController* NewController) override;
+
+	virtual void OnRep_PlayerState() override;
 	
 protected:
 
@@ -48,6 +57,11 @@ protected:
 	/** Mouse Look Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
 	UInputAction* MouseLookAction;
+
+	void InitializeAbilitySystem();
+
+	UPROPERTY(Transient)
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 public:
 
