@@ -22,16 +22,16 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
  *  Implements a controllable orbiting camera
  */
 UCLASS(abstract)
-class IMPULSEARENA_API AImpulseArenaCharacter: public ACharacter, public IAbilitySystemInterface
+class IMPULSEARENA_API AImpulseArenaCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 	/** Camera boom positioning the camera behind the character */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
 
 	/** Follow camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -39,23 +39,23 @@ class IMPULSEARENA_API AImpulseArenaCharacter: public ACharacter, public IAbilit
 	virtual void PossessedBy(AController* NewController) override;
 
 	virtual void OnRep_PlayerState() override;
-	
+
 protected:
 
 	/** Jump Input Action */
-	UPROPERTY(EditAnywhere, Category="Input")
+	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* JumpAction;
 
 	/** Move Input Action */
-	UPROPERTY(EditAnywhere, Category="Input")
+	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* MoveAction;
 
 	/** Look Input Action */
-	UPROPERTY(EditAnywhere, Category="Input")
+	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* LookAction;
 
 	/** Mouse Look Input Action */
-	UPROPERTY(EditAnywhere, Category="Input")
+	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* MouseLookAction;
 
 	void InitializeAbilitySystem();
@@ -66,7 +66,7 @@ protected:
 public:
 
 	/** Constructor */
-	AImpulseArenaCharacter();	
+	AImpulseArenaCharacter();
 
 protected:
 
@@ -84,19 +84,19 @@ protected:
 public:
 
 	/** Handles move inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category="Input")
+	UFUNCTION(BlueprintCallable, Category = "Input")
 	virtual void DoMove(float Right, float Forward);
 
 	/** Handles look inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category="Input")
+	UFUNCTION(BlueprintCallable, Category = "Input")
 	virtual void DoLook(float Yaw, float Pitch);
 
 	/** Handles jump pressed inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category="Input")
+	UFUNCTION(BlueprintCallable, Category = "Input")
 	virtual void DoJumpStart();
 
 	/** Handles jump pressed inputs from either controls or UI interfaces */
-	UFUNCTION(BlueprintCallable, Category="Input")
+	UFUNCTION(BlueprintCallable, Category = "Input")
 	virtual void DoJumpEnd();
 
 public:

@@ -9,26 +9,25 @@ class UAbilitySystemComponent;
 class UImpulseArenaAttributeSet;
 
 UCLASS()
-class IMPULSEARENA_API AImpulseArenaPlayerState
-    : public APlayerState, public IAbilitySystemInterface
+class IMPULSEARENA_API AImpulseArenaPlayerState : public APlayerState, public IAbilitySystemInterface
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 
 public:
-    AImpulseArenaPlayerState();
+	AImpulseArenaPlayerState();
 
-    virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
-    UImpulseArenaAttributeSet* GetAttributeSet() const
-    {
-        return AttributeSet;
-    }
+	UImpulseArenaAttributeSet* GetAttributeSet() const
+	{
+		return AttributeSet;
+	}
 
 protected:
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
-    TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
-    TObjectPtr<UImpulseArenaAttributeSet> AttributeSet;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
+	TObjectPtr<UImpulseArenaAttributeSet> AttributeSet;
 };

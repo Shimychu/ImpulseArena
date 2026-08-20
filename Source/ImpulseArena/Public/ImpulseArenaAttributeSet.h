@@ -14,34 +14,26 @@
 UCLASS()
 class IMPULSEARENA_API UImpulseArenaAttributeSet : public UAttributeSet
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 
 public:
-    UImpulseArenaAttributeSet();
+	UImpulseArenaAttributeSet();
 
-    virtual void GetLifetimeReplicatedProps(
-        TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-    ATTRIBUTE_ACCESSORS(UImpulseArenaAttributeSet, Energy)
-        ATTRIBUTE_ACCESSORS(UImpulseArenaAttributeSet, MaxEnergy)
+	ATTRIBUTE_ACCESSORS(UImpulseArenaAttributeSet, Energy)
+	ATTRIBUTE_ACCESSORS(UImpulseArenaAttributeSet, MaxEnergy)
 
 protected:
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Energy, Category = "Attributes")
+	FGameplayAttributeData Energy;
 
-    UPROPERTY(
-        BlueprintReadOnly,
-        ReplicatedUsing = OnRep_Energy,
-        Category = "Attributes")
-    FGameplayAttributeData Energy;
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_MaxEnergy,Category = "Attributes")
+	FGameplayAttributeData MaxEnergy;
 
-    UPROPERTY(
-        BlueprintReadOnly,
-        ReplicatedUsing = OnRep_MaxEnergy,
-        Category = "Attributes")
-    FGameplayAttributeData MaxEnergy;
+	UFUNCTION()
+	void OnRep_Energy(const FGameplayAttributeData& OldEnergy);
 
-    UFUNCTION()
-    void OnRep_Energy(const FGameplayAttributeData& OldEnergy);
-
-    UFUNCTION()
-    void OnRep_MaxEnergy(const FGameplayAttributeData& OldMaxEnergy);
+	UFUNCTION()
+	void OnRep_MaxEnergy(const FGameplayAttributeData& OldMaxEnergy);
 };

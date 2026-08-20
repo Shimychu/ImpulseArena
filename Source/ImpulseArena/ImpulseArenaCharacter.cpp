@@ -18,7 +18,7 @@ AImpulseArenaCharacter::AImpulseArenaCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-		
+
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -56,7 +56,7 @@ void AImpulseArenaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 {
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
-		
+
 		// Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
@@ -134,8 +134,7 @@ void AImpulseArenaCharacter::DoJumpEnd()
 	StopJumping();
 }
 
-UAbilitySystemComponent*
-AImpulseArenaCharacter::GetAbilitySystemComponent() const
+UAbilitySystemComponent* AImpulseArenaCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
 }
@@ -156,23 +155,19 @@ void AImpulseArenaCharacter::OnRep_PlayerState()
 
 void AImpulseArenaCharacter::InitializeAbilitySystem()
 {
-	AImpulseArenaPlayerState* ImpulsePlayerState =
-		GetPlayerState<AImpulseArenaPlayerState>();
+	AImpulseArenaPlayerState* ImpulsePlayerState = GetPlayerState<AImpulseArenaPlayerState>();
 
 	if (!ImpulsePlayerState)
 	{
 		return;
 	}
 
-	AbilitySystemComponent =
-		ImpulsePlayerState->GetAbilitySystemComponent();
+	AbilitySystemComponent = ImpulsePlayerState->GetAbilitySystemComponent();
 
 	if (!AbilitySystemComponent)
 	{
 		return;
 	}
 
-	AbilitySystemComponent->InitAbilityActorInfo(
-		ImpulsePlayerState,
-		this);
+	AbilitySystemComponent->InitAbilityActorInfo(ImpulsePlayerState, this);
 }
