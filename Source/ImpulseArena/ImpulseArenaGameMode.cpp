@@ -5,7 +5,7 @@
 
 AImpulseArenaGameMode::AImpulseArenaGameMode()
 {
+	// Set the pawn and player state classes to use for this game mode.
     DefaultPawnClass = AImpulseArenaCharacter::StaticClass();
-
     PlayerStateClass = AImpulseArenaPlayerState::StaticClass();
 }

@@ -5,6 +5,7 @@
 
 AImpulseArenaPlayerState::AImpulseArenaPlayerState()
 {
+	// Have player state create the ability system component and attribute set so that they are available on both the client and server.
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
