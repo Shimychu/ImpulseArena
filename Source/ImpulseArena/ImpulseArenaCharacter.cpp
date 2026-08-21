@@ -13,6 +13,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "ImpulseArena.h"
+#include "ImpulseArenaKineticPushAbility.h"
 
 AImpulseArenaCharacter::AImpulseArenaCharacter()
 {
@@ -67,6 +68,9 @@ void AImpulseArenaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AImpulseArenaCharacter::Look);
+
+		// Push
+		EnhancedInputComponent->BindAction(KineticPushAction, ETriggerEvent::Started, this, &AImpulseArenaCharacter::KineticPush);
 	}
 	else
 	{
@@ -144,6 +148,13 @@ void AImpulseArenaCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	InitializeAbilitySystem();
+
+	if (HasAuthority() && AbilitySystemComponent)
+	{
+		AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UImpulseArenaKineticPushAbility::StaticClass(), 1));
+		FGameplayAbilitySpecHandle Handle = AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UImpulseArenaKineticPushAbility::StaticClass(), 1));
+		UE_LOG(LogTemp, Warning, TEXT("Granted Kinetic Push: %s"), Handle.IsValid() ? TEXT("YES") : TEXT("NO"));
+	}
 }
 
 void AImpulseArenaCharacter::OnRep_PlayerState()
@@ -170,4 +181,14 @@ void AImpulseArenaCharacter::InitializeAbilitySystem()
 	}
 
 	AbilitySystemComponent->InitAbilityActorInfo(ImpulsePlayerState, this);
+}
+
+void AImpulseArenaCharacter::KineticPush()
+{
+	if (!AbilitySystemComponent)
+	{
+		return;
+	}
+
+	AbilitySystemComponent->TryActivateAbilityByClass(UImpulseArenaKineticPushAbility::StaticClass());
 }

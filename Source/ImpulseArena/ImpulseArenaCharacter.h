@@ -58,6 +58,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* MouseLookAction;
 
+	// Custom Inputs
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> KineticPushAction;
+
+	void KineticPush();
+
+	// Ability System
 	void InitializeAbilitySystem();
 
 	UPROPERTY(Transient)
