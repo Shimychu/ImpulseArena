@@ -29,9 +29,17 @@ void UImpulseArenaKineticPushAbility::ActivateAbility(const FGameplayAbilitySpec
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
     AActor* Avatar = ActorInfo ? ActorInfo->AvatarActor.Get() : nullptr;
-    if (!Avatar) { EndAbility(Handle, ActorInfo, ActivationInfo, true, true); return; }
+    if (!Avatar) 
+    { 
+        EndAbility(Handle, ActorInfo, ActivationInfo, true, true); 
+        return; 
+    }
 
-    if (!Avatar->HasAuthority()) { EndAbility(Handle, ActorInfo, ActivationInfo, true, false); return; }
+    if (!Avatar->HasAuthority()) 
+    { 
+        EndAbility(Handle, ActorInfo, ActivationInfo, true, false); 
+        return; 
+    }
 
     const FVector Forward = Avatar->GetActorForwardVector();
     const FVector Center = Avatar->GetActorLocation() + Forward * PushDistance;
@@ -55,7 +63,8 @@ void UImpulseArenaKineticPushAbility::ActivateAbility(const FGameplayAbilitySpec
 
             if (Component && Component->IsSimulatingPhysics())
             {
-                Component->AddImpulse(Forward * PushStrength, NAME_None, true);
+                const FVector PushDirection = (Component->GetComponentLocation() - Avatar->GetActorLocation()).GetSafeNormal();
+                Component->AddImpulse(PushDirection * PushStrength, NAME_None, true);
             }
         }
     }
