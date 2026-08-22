@@ -15,10 +15,18 @@ class IMPULSEARENA_API AImpulseArenaBall : public AActor
 public:
     AImpulseArenaBall();
 
+    void ResetBall();
+
 protected:
+    
+    virtual void BeginPlay() override;
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ball")
     TObjectPtr<USphereComponent> CollisionComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ball")
     TObjectPtr<UStaticMeshComponent> MeshComponent;
+
+private:
+    FTransform StartingTransform;
 };

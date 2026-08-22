@@ -1,0 +1,24 @@
+#include "ImpulseArenaGameState.h"
+#include "Net/UnrealNetwork.h"
+
+AImpulseArenaGameState::AImpulseArenaGameState()
+{
+    bReplicates = true;
+}
+
+void AImpulseArenaGameState::AddScore(EImpulseArenaTeam Team)
+{
+    if (!HasAuthority()) { return; }
+
+    if (Team == EImpulseArenaTeam::Blue) { ++BlueScore; }
+    else { ++RedScore; }
+
+    UE_LOG(LogTemp, Warning, TEXT("Score - Blue: %d | Red: %d"), BlueScore, RedScore);
+}
+
+void AImpulseArenaGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+    DOREPLIFETIME(AImpulseArenaGameState, BlueScore);
+    DOREPLIFETIME(AImpulseArenaGameState, RedScore);
+}
