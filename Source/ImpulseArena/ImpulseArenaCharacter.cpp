@@ -14,6 +14,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "ImpulseArena.h"
+#include "ImpulseArenaGameplayTags.h"
 #include "ImpulseArenaKineticPushAbility.h"
 
 AImpulseArenaCharacter::AImpulseArenaCharacter()
@@ -72,6 +73,9 @@ void AImpulseArenaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 		// Push
 		EnhancedInputComponent->BindAction(KineticPushAction, ETriggerEvent::Started, this, &AImpulseArenaCharacter::KineticPush);
+
+		// Dash
+		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Started, this, &AImpulseArenaCharacter::Dash);
 	}
 	else
 	{
@@ -147,15 +151,8 @@ UAbilitySystemComponent* AImpulseArenaCharacter::GetAbilitySystemComponent() con
 void AImpulseArenaCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-
 	InitializeAbilitySystem();
-
-	if (HasAuthority() && AbilitySystemComponent)
-	{
-		AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UImpulseArenaKineticPushAbility::StaticClass(), 1));
-		FGameplayAbilitySpecHandle Handle = AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(UImpulseArenaKineticPushAbility::StaticClass(), 1));
-		UE_LOG(LogTemp, Warning, TEXT("Granted Kinetic Push: %s"), Handle.IsValid() ? TEXT("YES") : TEXT("NO"));
-	}
+	GrantStartupAbilities();
 }
 
 void AImpulseArenaCharacter::OnRep_PlayerState()
@@ -192,4 +189,29 @@ void AImpulseArenaCharacter::KineticPush()
 	}
 
 	AbilitySystemComponent->TryActivateAbilityByClass(UImpulseArenaKineticPushAbility::StaticClass());
+}
+
+void AImpulseArenaCharacter::GrantStartupAbilities()
+{
+	if (!HasAuthority() || !AbilitySystemComponent) 
+	{ 
+		return; 
+	}
+
+	for (const TSubclassOf<UGameplayAbility>& AbilityClass : StartupAbilities)
+	{
+		if (AbilityClass && !AbilitySystemComponent->FindAbilitySpecFromClass(AbilityClass)) 
+		{ 
+			AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(AbilityClass, 1)); 
+		}
+	}
+}
+
+void AImpulseArenaCharacter::Dash()
+{
+	if (!AbilitySystemComponent) { return; }
+
+	FGameplayTagContainer AbilityTags;
+	AbilityTags.AddTag(ImpulseArenaGameplayTags::Ability_Movement_Dash);
+	AbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTags);
 }
