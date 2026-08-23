@@ -76,6 +76,11 @@ protected:
 
 	void ApplyStartupEffects();
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> ShieldAction;
+
+	void Shield();
+
 	// Ability System
 	void InitializeAbilitySystem();
 

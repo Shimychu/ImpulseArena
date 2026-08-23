@@ -77,6 +77,9 @@ void AImpulseArenaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 		// Dash
 		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Started, this, &AImpulseArenaCharacter::Dash);
+
+		// Shield or Blocking
+		EnhancedInputComponent->BindAction(ShieldAction, ETriggerEvent::Started, this, &AImpulseArenaCharacter::Shield);
 	}
 	else
 	{
@@ -231,4 +234,16 @@ void AImpulseArenaCharacter::ApplyStartupEffects()
 
 		AbilitySystemComponent->ApplyGameplayEffectToSelf(EffectClass->GetDefaultObject<UGameplayEffect>(), 1.0f, EffectContext);
 	}
+}
+
+void AImpulseArenaCharacter::Shield()
+{
+	if (!AbilitySystemComponent) 
+	{ 
+		return; 
+	}
+
+	FGameplayTagContainer ActivationTags;
+	ActivationTags.AddTag(ImpulseArenaGameplayTags::Ability_Defense_Shield);
+	AbilitySystemComponent->TryActivateAbilitiesByTag(ActivationTags);
 }

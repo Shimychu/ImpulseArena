@@ -3,6 +3,9 @@
 #include "Components/PrimitiveComponent.h"
 #include "Engine/OverlapResult.h"
 #include "Engine/World.h"
+#include "GameFramework/Character.h"
+#include "AbilitySystemInterface.h"
+#include "AbilitySystemComponent.h"
 #include "DrawDebugHelpers.h"
 
 UImpulseArenaKineticPushAbility::UImpulseArenaKineticPushAbility()
@@ -43,6 +46,7 @@ void UImpulseArenaKineticPushAbility::ActivateAbility(const FGameplayAbilitySpec
     TArray<FOverlapResult> Overlaps;
     FCollisionObjectQueryParams ObjectQuery;
     ObjectQuery.AddObjectTypesToQuery(ECC_PhysicsBody);
+    ObjectQuery.AddObjectTypesToQuery(ECC_Pawn);
 
     FCollisionQueryParams QueryParams;
     QueryParams.AddIgnoredActor(Avatar);
@@ -53,6 +57,25 @@ void UImpulseArenaKineticPushAbility::ActivateAbility(const FGameplayAbilitySpec
     {
         for (const FOverlapResult& Result : Overlaps)
         {
+            ACharacter* TargetCharacter = Cast<ACharacter>(Result.GetActor());
+
+            if (TargetCharacter && TargetCharacter != Avatar)
+            {
+                float KnockbackMultiplier = 1.0f;
+
+                if (IAbilitySystemInterface* AbilityInterface = Cast<IAbilitySystemInterface>(TargetCharacter))
+                {
+                    if (UAbilitySystemComponent* TargetASC = AbilityInterface->GetAbilitySystemComponent())
+                    {
+                        if (TargetASC->HasMatchingGameplayTag(ImpulseArenaGameplayTags::State_Shielded)) { KnockbackMultiplier = 0.25f; }
+                    }
+                }
+
+                const FVector PushDirection = (TargetCharacter->GetActorLocation() - Avatar->GetActorLocation()).GetSafeNormal();
+                TargetCharacter->LaunchCharacter(PushDirection * PushStrength * KnockbackMultiplier, true, true);
+                continue;
+            }
+
             UPrimitiveComponent* Component = Result.GetComponent();
 
             if (Component && Component->IsSimulatingPhysics())
