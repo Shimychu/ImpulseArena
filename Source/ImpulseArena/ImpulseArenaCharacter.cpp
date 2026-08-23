@@ -10,6 +10,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
+#include "GameplayEffect.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
@@ -153,6 +154,7 @@ void AImpulseArenaCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 	InitializeAbilitySystem();
 	GrantStartupAbilities();
+	ApplyStartupEffects();
 }
 
 void AImpulseArenaCharacter::OnRep_PlayerState()
@@ -214,4 +216,19 @@ void AImpulseArenaCharacter::Dash()
 	FGameplayTagContainer AbilityTags;
 	AbilityTags.AddTag(ImpulseArenaGameplayTags::Ability_Movement_Dash);
 	AbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTags);
+}
+
+void AImpulseArenaCharacter::ApplyStartupEffects()
+{
+	if (!HasAuthority() || !AbilitySystemComponent) { return; }
+
+	for (const TSubclassOf<UGameplayEffect>& EffectClass : StartupEffects)
+	{
+		if (!EffectClass) { continue; }
+
+		FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
+		EffectContext.AddSourceObject(this);
+
+		AbilitySystemComponent->ApplyGameplayEffectToSelf(EffectClass->GetDefaultObject<UGameplayEffect>(), 1.0f, EffectContext);
+	}
 }

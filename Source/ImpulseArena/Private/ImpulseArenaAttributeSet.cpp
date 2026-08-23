@@ -1,5 +1,6 @@
 #include "ImpulseArenaAttributeSet.h"
 
+#include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
 
 UImpulseArenaAttributeSet::UImpulseArenaAttributeSet()
@@ -16,6 +17,16 @@ void UImpulseArenaAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePrope
 	DOREPLIFETIME_CONDITION_NOTIFY(UImpulseArenaAttributeSet, MaxEnergy, COND_None, REPNOTIFY_Always);
 }
 
+void UImpulseArenaAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+
+	if (Data.EvaluatedData.Attribute == GetEnergyAttribute())
+	{
+		SetEnergy(FMath::Clamp(GetEnergy(), 0.0f, GetMaxEnergy()));
+	}
+}
+
 void UImpulseArenaAttributeSet::OnRep_Energy(const FGameplayAttributeData& OldEnergy)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UImpulseArenaAttributeSet, Energy, OldEnergy);
@@ -25,3 +36,4 @@ void UImpulseArenaAttributeSet::OnRep_MaxEnergy(const FGameplayAttributeData& Ol
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UImpulseArenaAttributeSet, MaxEnergy, OldMaxEnergy);
 }
+

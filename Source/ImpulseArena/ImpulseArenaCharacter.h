@@ -15,6 +15,7 @@ class UCameraComponent;
 class UInputAction;
 struct FInputActionValue;
 class UGameplayAbility;
+class UGameplayEffect;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -69,6 +70,11 @@ protected:
 	TObjectPtr<UInputAction> DashAction;
 
 	void Dash();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
+	TArray<TSubclassOf<UGameplayEffect>> StartupEffects;
+
+	void ApplyStartupEffects();
 
 	// Ability System
 	void InitializeAbilitySystem();

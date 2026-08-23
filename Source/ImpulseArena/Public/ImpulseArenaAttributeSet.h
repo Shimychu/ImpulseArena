@@ -5,6 +5,8 @@
 #include "AbilitySystemComponent.h"
 #include "ImpulseArenaAttributeSet.generated.h"
 
+struct FGameplayEffectModCallbackData;
+
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
     GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
     GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
@@ -20,6 +22,8 @@ public:
 	UImpulseArenaAttributeSet();
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
 	ATTRIBUTE_ACCESSORS(UImpulseArenaAttributeSet, Energy)
 	ATTRIBUTE_ACCESSORS(UImpulseArenaAttributeSet, MaxEnergy)
