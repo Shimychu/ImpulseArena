@@ -23,10 +23,16 @@ public:
 
     virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+    UFUNCTION()
+    void OnRep_BlueScore();
+
+    UFUNCTION()
+    void OnRep_RedScore();
+
 protected:
-    UPROPERTY(Replicated, BlueprintReadOnly, Category = "Score")
+    UPROPERTY(ReplicatedUsing = OnRep_BlueScore, BlueprintReadOnly, Category = "Score")
     int32 BlueScore = 0;
 
-    UPROPERTY(Replicated, BlueprintReadOnly, Category = "Score")
+    UPROPERTY(ReplicatedUsing = OnRep_RedScore, BlueprintReadOnly, Category = "Score")
     int32 RedScore = 0;
 };

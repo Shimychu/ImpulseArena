@@ -35,6 +35,8 @@ void UImpulseArenaKineticPushAbility::ActivateAbility(const FGameplayAbilitySpec
         return; 
     }
 
+    UE_LOG(LogTemp, Warning, TEXT("Executing Kinetic Push physics. Authority: %s"), Avatar->HasAuthority() ? TEXT("YES") : TEXT("NO"));
+
     if (!Avatar->HasAuthority()) 
     { 
         EndAbility(Handle, ActorInfo, ActivationInfo, true, false); 

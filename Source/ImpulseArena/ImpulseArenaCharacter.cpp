@@ -1,8 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+#include "ImpulseArenaCharacter.h"
+
 #include "AbilitySystemComponent.h"
 #include "ImpulseArenaPlayerState.h"
-#include "ImpulseArenaCharacter.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
