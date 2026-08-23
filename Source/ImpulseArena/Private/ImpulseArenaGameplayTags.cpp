@@ -12,4 +12,7 @@ namespace ImpulseArenaGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_KineticPush,			"Cooldown.KineticPush",			"Kinetic Push is on cooldown");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Dash,					"Cooldown.Dash",				"Dash is on cooldown");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cooldown_Shield,					"Cooldown.Shield",				"Shield is on cooldown");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Movement_Sprint,			"Ability.Movement.Sprint",		"Sprint movement ability");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(State_Sprinting,					"State.Sprinting",				"Character is currently sprinting");
 }

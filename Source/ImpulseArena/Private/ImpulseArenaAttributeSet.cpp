@@ -7,6 +7,7 @@ UImpulseArenaAttributeSet::UImpulseArenaAttributeSet()
 {
 	InitMaxEnergy(100.0f);
 	InitEnergy(100.0f);
+	InitMoveSpeed(500.0f);
 }
 
 void UImpulseArenaAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -15,6 +16,7 @@ void UImpulseArenaAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePrope
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UImpulseArenaAttributeSet, Energy, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UImpulseArenaAttributeSet, MaxEnergy, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UImpulseArenaAttributeSet, MoveSpeed, COND_None, REPNOTIFY_Always);
 }
 
 void UImpulseArenaAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
@@ -37,3 +39,7 @@ void UImpulseArenaAttributeSet::OnRep_MaxEnergy(const FGameplayAttributeData& Ol
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UImpulseArenaAttributeSet, MaxEnergy, OldMaxEnergy);
 }
 
+void UImpulseArenaAttributeSet::OnRep_MoveSpeed(const FGameplayAttributeData& OldMoveSpeed)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UImpulseArenaAttributeSet, MoveSpeed, OldMoveSpeed);
+}

@@ -19,6 +19,8 @@ class UGameplayEffect;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
+struct FOnAttributeChangeData;
+
 /**
  *  A simple player-controllable third person character
  *  Implements a controllable orbiting camera
@@ -91,6 +93,14 @@ protected:
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 
 	void GrantStartupAbilities();
+
+	void HandleMoveSpeedChanged(const FOnAttributeChangeData& Data);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> SprintAction;
+
+	void StartSprint();
+	void StopSprint();
 
 public:
 

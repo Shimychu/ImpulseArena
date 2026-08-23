@@ -12,6 +12,8 @@ namespace ImpulseArenaGameplayTags
     // States
     UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Dashing);
     UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Shielded);
+    UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Movement_Sprint);
+    UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Sprinting);
 
     // Cooldowns
     UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cooldown_KineticPush);

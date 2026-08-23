@@ -17,6 +17,8 @@
 #include "ImpulseArena.h"
 #include "ImpulseArenaGameplayTags.h"
 #include "ImpulseArenaKineticPushAbility.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "ImpulseArenaAttributeSet.h"
 
 AImpulseArenaCharacter::AImpulseArenaCharacter()
 {
@@ -80,6 +82,10 @@ void AImpulseArenaCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 		// Shield or Blocking
 		EnhancedInputComponent->BindAction(ShieldAction, ETriggerEvent::Started, this, &AImpulseArenaCharacter::Shield);
+
+		//Sprint
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AImpulseArenaCharacter::StartSprint);
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AImpulseArenaCharacter::StopSprint);
 	}
 	else
 	{
@@ -184,6 +190,9 @@ void AImpulseArenaCharacter::InitializeAbilitySystem()
 	}
 
 	AbilitySystemComponent->InitAbilityActorInfo(ImpulsePlayerState, this);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(ImpulsePlayerState->GetAttributeSet()->GetMoveSpeedAttribute()).AddUObject(this, &AImpulseArenaCharacter::HandleMoveSpeedChanged);
+
+	GetCharacterMovement()->MaxWalkSpeed = ImpulsePlayerState->GetAttributeSet()->GetMoveSpeed();
 }
 
 void AImpulseArenaCharacter::KineticPush()
@@ -214,7 +223,10 @@ void AImpulseArenaCharacter::GrantStartupAbilities()
 
 void AImpulseArenaCharacter::Dash()
 {
-	if (!AbilitySystemComponent) { return; }
+	if (!AbilitySystemComponent) 
+	{ 
+		return; 
+	}
 
 	FGameplayTagContainer AbilityTags;
 	AbilityTags.AddTag(ImpulseArenaGameplayTags::Ability_Movement_Dash);
@@ -223,11 +235,17 @@ void AImpulseArenaCharacter::Dash()
 
 void AImpulseArenaCharacter::ApplyStartupEffects()
 {
-	if (!HasAuthority() || !AbilitySystemComponent) { return; }
+	if (!HasAuthority() || !AbilitySystemComponent) 
+	{ 
+		return; 
+	}
 
 	for (const TSubclassOf<UGameplayEffect>& EffectClass : StartupEffects)
 	{
-		if (!EffectClass) { continue; }
+		if (!EffectClass) 
+		{ 
+			continue; 
+		}
 
 		FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
 		EffectContext.AddSourceObject(this);
@@ -246,4 +264,33 @@ void AImpulseArenaCharacter::Shield()
 	FGameplayTagContainer ActivationTags;
 	ActivationTags.AddTag(ImpulseArenaGameplayTags::Ability_Defense_Shield);
 	AbilitySystemComponent->TryActivateAbilitiesByTag(ActivationTags);
+}
+
+void AImpulseArenaCharacter::HandleMoveSpeedChanged(const FOnAttributeChangeData& Data)
+{
+	GetCharacterMovement()->MaxWalkSpeed = Data.NewValue;
+}
+
+void AImpulseArenaCharacter::StartSprint()
+{
+	if (!AbilitySystemComponent) 
+	{ 
+		return; 
+	}
+
+	FGameplayTagContainer ActivationTags;
+	ActivationTags.AddTag(ImpulseArenaGameplayTags::Ability_Movement_Sprint);
+	AbilitySystemComponent->TryActivateAbilitiesByTag(ActivationTags);
+}
+
+void AImpulseArenaCharacter::StopSprint()
+{
+	if (!AbilitySystemComponent) 
+	{ 
+		return; 
+	}
+
+	FGameplayTagContainer SprintTags;
+	SprintTags.AddTag(ImpulseArenaGameplayTags::Ability_Movement_Sprint);
+	AbilitySystemComponent->CancelAbilities(&SprintTags);
 }

@@ -27,6 +27,7 @@ public:
 
 	ATTRIBUTE_ACCESSORS(UImpulseArenaAttributeSet, Energy)
 	ATTRIBUTE_ACCESSORS(UImpulseArenaAttributeSet, MaxEnergy)
+	ATTRIBUTE_ACCESSORS(UImpulseArenaAttributeSet, MoveSpeed)
 
 protected:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Energy, Category = "Attributes")
@@ -35,9 +36,15 @@ protected:
 	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_MaxEnergy,Category = "Attributes")
 	FGameplayAttributeData MaxEnergy;
 
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MoveSpeed, Category = "Attributes")
+	FGameplayAttributeData MoveSpeed;
+
 	UFUNCTION()
 	void OnRep_Energy(const FGameplayAttributeData& OldEnergy);
 
 	UFUNCTION()
 	void OnRep_MaxEnergy(const FGameplayAttributeData& OldMaxEnergy);
+
+	UFUNCTION()
+	void OnRep_MoveSpeed(const FGameplayAttributeData& OldMoveSpeed);
 };
