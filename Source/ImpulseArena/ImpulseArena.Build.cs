@@ -22,8 +22,9 @@ public class ImpulseArena : ModuleRules
 
 			"GameplayAbilities",
 			"GameplayTags",
-			"GameplayTasks"
-		});
+			"GameplayTasks",
+            "GeometryCollectionEngine"
+        });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
 

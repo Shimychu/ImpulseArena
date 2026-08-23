@@ -27,6 +27,9 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ball")
     TObjectPtr<UStaticMeshComponent> MeshComponent;
 
+    UFUNCTION()
+    void OnBallHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
 private:
     FTransform StartingTransform;
 };

@@ -21,6 +21,18 @@ public:
     UPROPERTY(EditDefaultsOnly, Category = "Kinetic Push")
     float PushStrength = 1500.0f;
 
+    UPROPERTY(EditDefaultsOnly, Category = "Kinetic Push|Chaos")
+    float ChaosStrain = 500000.0f;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Kinetic Push|Chaos")
+    float ChaosStrainRadius = 250.0f;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Kinetic Push|Chaos")
+    float ChaosImpulseRadius = 300.0f;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Kinetic Push|Chaos")
+    float ChaosImpulseStrength = 1500.0f;
+
 protected:
     virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 };

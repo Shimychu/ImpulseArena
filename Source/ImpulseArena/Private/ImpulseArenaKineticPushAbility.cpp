@@ -7,6 +7,7 @@
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
 #include "DrawDebugHelpers.h"
+#include "GeometryCollection/GeometryCollectionComponent.h"
 
 UImpulseArenaKineticPushAbility::UImpulseArenaKineticPushAbility()
 {
@@ -47,6 +48,7 @@ void UImpulseArenaKineticPushAbility::ActivateAbility(const FGameplayAbilitySpec
     FCollisionObjectQueryParams ObjectQuery;
     ObjectQuery.AddObjectTypesToQuery(ECC_PhysicsBody);
     ObjectQuery.AddObjectTypesToQuery(ECC_Pawn);
+    ObjectQuery.AddObjectTypesToQuery(ECC_Destructible);
 
     FCollisionQueryParams QueryParams;
     QueryParams.AddIgnoredActor(Avatar);
@@ -57,6 +59,37 @@ void UImpulseArenaKineticPushAbility::ActivateAbility(const FGameplayAbilitySpec
     {
         for (const FOverlapResult& Result : Overlaps)
         {
+            UPrimitiveComponent* Component = Result.GetComponent();
+            if (!Component) 
+            { 
+                continue; 
+            }
+
+            if (UGeometryCollectionComponent* GeometryCollection = Cast<UGeometryCollectionComponent>(Component))
+            {
+                const FVector TraceStart = Avatar->GetActorLocation();
+                const FVector TraceEnd = GeometryCollection->GetComponentLocation();
+
+                FHitResult HitResult;
+                FCollisionQueryParams TraceParams;
+                TraceParams.AddIgnoredActor(Avatar);
+
+                const bool bHitGeometry = Avatar->GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECC_Destructible, TraceParams);
+
+                if (bHitGeometry && HitResult.GetComponent() == GeometryCollection && HitResult.Item >= 0)
+                {
+                    UE_LOG(LogTemp, Warning, TEXT("Geometry Collection Hit Item: %d"), HitResult.Item);
+                    GeometryCollection->ApplyExternalStrain(HitResult.Item, HitResult.ImpactPoint, ChaosStrainRadius, 2, 1.0f, ChaosStrain);
+                    GeometryCollection->AddRadialImpulse(HitResult.ImpactPoint, ChaosImpulseRadius, ChaosImpulseStrength, ERadialImpulseFalloff::RIF_Linear, true);
+                }
+                else
+                {
+                    UE_LOG(LogTemp, Warning, TEXT("Failed to get valid Geometry Collection piece. Item: %d"), HitResult.Item);
+                }
+
+                continue;
+            }
+
             ACharacter* TargetCharacter = Cast<ACharacter>(Result.GetActor());
 
             if (TargetCharacter && TargetCharacter != Avatar)
@@ -67,7 +100,10 @@ void UImpulseArenaKineticPushAbility::ActivateAbility(const FGameplayAbilitySpec
                 {
                     if (UAbilitySystemComponent* TargetASC = AbilityInterface->GetAbilitySystemComponent())
                     {
-                        if (TargetASC->HasMatchingGameplayTag(ImpulseArenaGameplayTags::State_Shielded)) { KnockbackMultiplier = 0.25f; }
+                        if (TargetASC->HasMatchingGameplayTag(ImpulseArenaGameplayTags::State_Shielded)) 
+                        { 
+                            KnockbackMultiplier = 0.25f; 
+                        }
                     }
                 }
 
@@ -76,9 +112,7 @@ void UImpulseArenaKineticPushAbility::ActivateAbility(const FGameplayAbilitySpec
                 continue;
             }
 
-            UPrimitiveComponent* Component = Result.GetComponent();
-
-            if (Component && Component->IsSimulatingPhysics())
+            if (Component->IsSimulatingPhysics())
             {
                 const FVector PushDirection = (Component->GetComponentLocation() - Avatar->GetActorLocation()).GetSafeNormal();
                 Component->AddImpulse(PushDirection * PushStrength, NAME_None, true);
