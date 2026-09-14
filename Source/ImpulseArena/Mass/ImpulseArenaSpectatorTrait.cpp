@@ -6,5 +6,5 @@
 void UImpulseArenaSpectatorTrait::BuildTemplate(FMassEntityTemplateBuildContext& BuildContext, const UWorld& World) const
 {
     BuildContext.AddFragment<FTransformFragment>();
-    BuildContext.AddFragment<FImpulseArenaSpectatorFragment>();
+    BuildContext.AddFragment_GetRef<FImpulseArenaSpectatorFragment>().TeamIndex = static_cast<uint8>(SupportedTeam);
 }

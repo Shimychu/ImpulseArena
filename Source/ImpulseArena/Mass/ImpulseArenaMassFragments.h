@@ -21,5 +21,6 @@ struct IMPULSEARENA_API FImpulseArenaSpectatorFragment : public FMassFragment
     FVector TargetLocation = FVector::ZeroVector;
     float ReactionTimeRemaining = 0.0f;
     uint8 TeamIndex = 0;
+    uint32 LastGoalSerial = 0;
     EImpulseArenaSpectatorReaction Reaction = EImpulseArenaSpectatorReaction::Idle;
 };

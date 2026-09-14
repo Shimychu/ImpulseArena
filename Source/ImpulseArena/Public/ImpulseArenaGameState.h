@@ -15,6 +15,21 @@ public:
 
     void AddScore(EImpulseArenaTeam Team);
 
+    uint32 GetSpectatorGoalSerial() const { return SpectatorGoalSerial; }
+    EImpulseArenaTeam GetSpectatorScoringTeam() const { return SpectatorScoringTeam; }
+    double GetSpectatorReactionEndTime() const { return SpectatorReactionEndTime; }
+
+private:
+    // Cosmetic event: existing spectators react on server and connected clients.
+    UFUNCTION(NetMulticast, Reliable)
+    void MulticastSpectatorGoal(EImpulseArenaTeam Team);
+
+    uint32 SpectatorGoalSerial = 0;
+    EImpulseArenaTeam SpectatorScoringTeam = EImpulseArenaTeam::Blue;
+    double SpectatorReactionEndTime = 0.0;
+
+public:
+
     UFUNCTION(BlueprintPure)
     int32 GetBlueScore() const { return BlueScore; }
 
