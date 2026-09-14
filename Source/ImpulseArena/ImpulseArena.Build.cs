@@ -23,7 +23,13 @@ public class ImpulseArena : ModuleRules
 			"GameplayAbilities",
 			"GameplayTags",
 			"GameplayTasks",
-            "GeometryCollectionEngine"
+            "GeometryCollectionEngine",
+
+			"MassCore",
+			"MassEntity",
+			"MassCommon",
+			"MassSpawner",
+			"MassSimulation"
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
