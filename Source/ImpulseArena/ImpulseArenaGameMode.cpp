@@ -5,6 +5,7 @@
 #include "ImpulseArenaCharacter.h"
 #include "ImpulseArenaPlayerState.h"
 #include "ImpulseArenaBall.h"
+#include "ImpulseArenaHUD.h"
 
 AImpulseArenaGameMode::AImpulseArenaGameMode()
 {
@@ -14,6 +15,7 @@ AImpulseArenaGameMode::AImpulseArenaGameMode()
 
     // Set the game state for this game mode.
     GameStateClass = AImpulseArenaGameState::StaticClass();
+    HUDClass = AImpulseArenaHUD::StaticClass();
 
 }
 
